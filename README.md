@@ -1,87 +1,65 @@
-# AI Research Copilot
+# 🧠 AI Research Copilot
 
-An autonomous research agent that helps with academic research by searching, reading, and summarizing scientific papers from arXiv.
+An autonomous research assistant that finds, reads, and summarizes scientific papers from arXiv — so you can focus on insights, not information overload.
+
+---
 
 ## Features
 
-- Search arXiv for relevant papers based on research goals
-- Extract and analyze paper abstracts and content
-- Build a knowledge base of research findings using sentence-transformers embeddings
-- Generate concise research summaries
-- Multi-agent workflow using LangGraph
-- Powered by Groq's Llama 3 8B model for fast, free inference
+* 🔍 Search arXiv based on your research goal
+* 🧠 Analyze abstracts or full papers
+* 📚 Build a local knowledge base using embeddings
+* ✍️ Summarize findings into clear overviews
+* 🤖 Multi-agent workflow powered by LangGraph
+* ⚡ Runs on Groq’s fast, free Llama 3 8B API
+
+---
 
 ## Setup
 
-1. Clone this repository
-2. Install dependencies:
 ```bash
+git clone https://github.com/your-username/ai-research-copilot.git
+cd ai-research-copilot
 pip install -r requirements.txt
 pip install sentence-transformers "numpy<2.0.0"
 ```
-3. Create a `.env` file with your API key:
+
+Create a `.env` file:
+
 ```
-GROQ_API_KEY=your_key_here
+GROQ_API_KEY=your_groq_api_key
 ```
+
+---
 
 ## Usage
 
 ```python
 from research_copilot import ResearchCopilot
 
-# Initialize with default Llama model
-copilot = ResearchCopilot()
+copilot = ResearchCopilot()  # or specify model="llama3-8b-8192"
 
-# Or specify a different Groq model
-copilot = ResearchCopilot(model="llama3-8b-8192")
-
-# Conduct research
 results = copilot.research(
-    research_goal="Your research question or goal here",
+    research_goal="Your research question here",
     max_papers=5,
-    include_full_text=False  # Set to True to analyze full papers
+    include_full_text=False
 )
 
-# Access findings and summary
-if 'findings' in results and 'findings' in results['findings']:
-    findings = results['findings']['findings']
-    print(f"Papers Found: {len(findings)}")
-    
-if 'summary' in results and 'summary' in results['summary']:
-    print("\nOverall Summary:")
+if 'findings' in results.get('findings', {}):
+    for paper in results['findings']['findings']:
+        print(paper['title'])
+
+if 'summary' in results.get('summary', {}):
+    print("\nSummary:")
     print(results['summary']['summary'])
 ```
 
-## Components
+---
 
-### Groq Integration
+## Tech Stack
 
-The Research Copilot uses Groq's API for all language model operations:
+* **Groq (Llama 3 8B)** for inference
+* **ChromaDB + Sentence Transformers** for local embeddings
+* **LangGraph** for orchestrating agent workflows
 
-- **Model**: Llama 3 8B
-- **Features**:
-  - Fast inference speed
-  - Free API access
-  - High-quality research analysis
-  - 8,192 token context window
-
-### Knowledge Base
-
-The system uses a vector-based knowledge base powered by:
-- **ChromaDB**: For efficient vector storage and retrieval
-- **Sentence Transformers**: Local embedding model (all-MiniLM-L6-v2)
-  - No additional API costs
-  - Fast local embedding generation
-  - Suitable for research paper analysis
-
-## Project Structure
-
-- `research_copilot/` - Main package directory
-  - `agents/` - Individual agent implementations
-  - `tools/` - Utility functions and API wrappers
-  - `knowledge_base/` - Knowledge base management with ChromaDB
-  - `workflows/` - LangGraph workflow definitions
-
-## License
-
-MIT 
+---
